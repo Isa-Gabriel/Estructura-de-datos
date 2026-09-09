@@ -1,0 +1,81 @@
+"""
+Lab 1 — Implementación de la clase Pila (Stack)
+INF 222 Estructura de Datos · Semestre 2026-2
+Estudiante: Isaac Cubilla
+Grupo: INF 222 — Estructura de Datos (2026-2)
+Fecha: 9/9/2026
+
+"""
+import os
+
+if __name__ == "__main__":
+
+    p = []
+
+    contador = True
+    while contador == True:
+     os.system('cls')  # Limpiar la pantalla 
+
+     print("\n 1. Agregar elementos a la pila")
+     print("\n 2. Eliminar elementos de la pila")
+     print("\n 3. Mostrar el tope de la pila")
+     print("\n 4. Mostrar tamaño de la pila y contenido de la pila")
+     opcion = int(input(" Escoja una opción: "))
+    
+
+     match opcion:
+        case 1:
+            elemento = input("Ingrese el elemento a agregar a la pila: ")
+
+            p.append(elemento) #guarda el elemento en p
+
+            print(f"\nElemento {elemento} agregado a la pila.")
+
+        case 2:
+            if len(p) == 0:
+                print("\nLa pila está vacía. No se puede eliminar ningún elemento.")
+            else:
+                elemento_eliminado = p.pop() #extrae el ultimo elemento de p y lo elimina
+                print(f"\nElemento '{elemento_eliminado}' eliminado de la pila.")
+
+        case 3:
+            if len(p) > 0:  # si p es mayor que 0 se puede observar que hay en p      
+               ultimo_elemento = p[-1]
+               print(f"\nElemento en el tope de la pila: {ultimo_elemento}")
+            else: 
+                print("\nLa pila está vacía. No hay elementos en el tope.")
+
+        case 4:
+            tamaño = len(p)
+            print(f"\nTamaño actual de la pila: {tamaño}")# Muestra el numero de la pila
+            print(f"\nContenido de la pila: {p}")  # Muestra la pila completa
+
+        case _:
+            print("Opción no válida. Por favor, elija una opción del 1 al 4.")
+
+     print("\n quieres hacer algo mas con la pila? Si/No")
+
+     tan=input("Ingrese su opción: \n").lower()
+    
+     if(tan=="si"):
+        contador=True
+     else:
+        contador=False
+
+"""
+DECLARACION DE IA
+
+IA utilizada                        : geminis 3.6 flash y vs code
+
+Para que                            : para investigar los principios de LIFO, como funciona y sus palabras reservadas
+
+que hice yo                         : le di prompts a la IA para que me explique el código y me ayude a entenderlo, 
+pense la logica del codigo y la IA autocompletaba el codigo repetitivo, le pedi a la IA que me enseñara python de 
+0 para poder entender el codigo
+
+prompts que le di a la IA           : Que hace este codigo?
+                                      explicame python desde 0
+
+puedo explicar todo el codigo sin IA: Sí
+
+"""
