@@ -1,0 +1,214 @@
+"""
+Lab 8 — Recursividad (con uso declarado de IA)
+INF 222 Estructura de Datos · Semestre 2026-2
+Estudiante: Isaac Cubilla
+Grupo: INF 222 — Estructura de Datos (2026-2)
+Fecha: 30/10/2026
+
+"""
+
+import time
+from functools import lru_cache
+
+
+# =============================================================================
+# PARTE 1 — FACTORIAL
+# =============================================================================
+
+def factorial(n):
+    """
+    Calcula n! de forma recursiva.
+    Caso base: factorial(0) = 1
+    Caso recursivo: factorial(n) = n × factorial(n-1)
+    Complejidad: O(n) tiempo, O(n) espacio (por la pila de llamadas).
+    """
+    if n == 0:
+        return 1
+    return n * factorial(n - 1)
+
+
+# =============================================================================
+# PARTE 2 — FIBONACCI
+# =============================================================================
+
+def fibonacci_recursivo(n):
+    """
+    Calcula el n-ésimo número de Fibonacci recursivamente.
+    Esta implementación es ineficiente: O(2^n) llamadas.
+    Solo para propósitos de análisis y trazado.
+    """
+    if n <= 1:
+        return n
+    return fibonacci_recursivo(n - 1) + fibonacci_recursivo(n - 2)
+
+
+@lru_cache(maxsize=None)
+def fibonacci_memoizado(n):
+    """
+    Calcula el n-ésimo número de Fibonacci con memoización.
+    O(n) tiempo, O(n) espacio.
+    """
+    if n <= 1:
+        return n
+    return fibonacci_memoizado(n - 1) + fibonacci_memoizado(n - 2)
+
+
+def fibonacci_iterativo(n):
+    """
+    Calcula el n-ésimo número de Fibonacci iterativamente.
+    O(n) tiempo, O(1) espacio.
+    """
+    if n <= 1:
+        return n
+    
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    return b
+
+
+# =============================================================================
+# PARTE 3 — TORRES DE HANOI
+# =============================================================================
+
+movimientos = []  # lista global para registrar los movimientos
+
+def torres_de_hanoi(n, origen, destino, auxiliar):
+    """
+    Resuelve el problema de Torres de Hanoi para n discos.
+    Parámetros:
+        n:         número de discos a mover
+        origen:    poste donde están los n discos al inicio
+        destino:   poste al que deben llegar todos los discos
+        auxiliar:  poste auxiliar
+    Efecto: agrega strings a `movimientos` con cada movimiento.
+    Complejidad: O(2^n - 1) movimientos.
+    """
+    if n == 1:
+        # Caso base: solo queda un disco por mover
+        movimientos.append(f"Mover disco 1 de {origen} a {destino}")
+        return
+    
+    # Caso recursivo:
+    # 1. Movemos la pila de n-1 discos al poste auxiliar, para despejar el disco más grande
+    torres_de_hanoi(n - 1, origen, auxiliar, destino)
+    
+    # 2. Movemos el disco más grande (n) directamente al destino
+    movimientos.append(f"Mover disco {n} de {origen} a {destino}")
+    
+    # 3. Movemos la pila de n-1 discos desde el auxiliar hacia el destino, encima del disco grande
+    torres_de_hanoi(n - 1, auxiliar, destino, origen)
+
+
+# =============================================================================
+# PARTE 4 — TRAZADO CON IA (obligatorio)
+# =============================================================================
+"""
+INSTRUCCIONES:
+1. Ejecuta fibonacci_recursivo(5) en tu mente o en papel primero.
+2. Luego consulta un asistente de IA con este prompt:
+   "Muéstrame el trazado paso a paso de la pila de llamadas de fibonacci(5)
+    usando la versión recursiva simple (sin memoización). Usa indentación para
+    mostrar la jerarquía de llamadas."
+3. Copia el trazado que generó la IA en el espacio de abajo.
+4. Reescríbelo CON TUS PROPIAS PALABRAS en el espacio "Trazado propio".
+   Dibuja también el diagrama ASCII de la pila de llamadas.
+
+-------------------------------------------------------------------------------
+TRAZADO GENERADO POR IA (Gemini):
+fib(5)
+├── fib(4)
+│   ├── fib(3)
+│   │   ├── fib(2)
+│   │   │   ├── fib(1) -> 1
+│   │   │   └── fib(0) -> 0
+│   │   │   Resultado fib(2): 1 + 0 = 1
+│   │   └── fib(1) -> 1
+│   │   Resultado fib(3): 1 + 1 = 2
+│   └── fib(2)
+│       ├── fib(1) -> 1
+│       └── fib(0) -> 0
+│       Resultado fib(2): 1 + 0 = 1
+│   Resultado fib(4): 2 + 1 = 3
+└── fib(3)
+    ├── fib(2)
+    │   ├── fib(1) -> 1
+    │   └── fib(0) -> 0
+    │   Resultado fib(2): 1 + 0 = 1
+    └── fib(1) -> 1
+    Resultado fib(3): 1 + 1 = 2
+Resultado final fib(5): 3 + 2 = 5
+
+
+TRAZADO PROPIO (reescrito por el estudiante, sin copiar de la IA):
+[Estudiante: Escribe aquí cómo Python evalúa SIEMPRE primero el lado izquierdo de la suma (ej: fib(n-1))
+hasta chocar con los casos base (1 o 0), y solo cuando esa rama entera retorna un número, recién se
+mueve a calcular el lado derecho (fib(n-2)). Menciona cómo fib(3) y fib(2) se recalculan varias veces 
+inútilmente y por qué eso hace que sea ineficiente.]
+
+
+DIAGRAMA ASCII DE LA PILA DE LLAMADAS (dibujado por ti):
+[Estudiante: Dibuja aquí un diagrama de árbol simple o una pila vertical que muestre cómo las llamadas
+se apilan y desapilan. Puedes usar el de arriba como inspiración pero hazlo a tu estilo.]
+-------------------------------------------------------------------------------
+"""
+
+
+# =============================================================================
+# CASOS DE PRUEBA Y COMPARACIÓN DE TIEMPOS
+# =============================================================================
+
+if __name__ == "__main__":
+    print("=" * 55)
+    print("PARTE 1 — Factorial")
+    print("=" * 55)
+    for n in [0, 1, 5, 10]:
+        print(f"  factorial({n}) = {factorial(n)}")
+
+    print("\n" + "=" * 55)
+    print("PARTE 2 — Fibonacci: comparación de eficiencia")
+    print("=" * 55)
+    casos = [10, 20, 30, 35]
+    for n in casos:
+        t0 = time.perf_counter()
+        r = fibonacci_recursivo(n)
+        t_rec = time.perf_counter() - t0
+
+        t0 = time.perf_counter()
+        m = fibonacci_memoizado(n)
+        t_mem = time.perf_counter() - t0
+
+        t0 = time.perf_counter()
+        i = fibonacci_iterativo(n)
+        t_it = time.perf_counter() - t0
+
+        assert r == m == i, f"Discrepancia en fib({n}): {r}, {m}, {i}"
+        print(f"  fib({n:2d}) = {r:10d} | recursivo: {t_rec:.4f}s | memo: {t_mem:.6f}s | iter: {t_it:.6f}s")
+
+    print("\n" + "=" * 55)
+    print("PARTE 3 — Torres de Hanoi (n=3)")
+    print("=" * 55)
+    movimientos.clear()
+    torres_de_hanoi(3, "A", "C", "B")
+    print(f"  Total de movimientos para n=3: {len(movimientos)} (esperado: 7)")
+    for mov in movimientos:
+        print(f"  {mov}")
+
+    print(f"\n  Para n=10: {2**10 - 1} movimientos (2^10 - 1)")
+    print(f"  Para n=20: {2**20 - 1:,} movimientos — ¿ves por qué O(2^n) escala mal?")
+
+
+"""
+DECLARACION DE IA
+
+IA utilizada                        : geminis 3.1 pro y vs code
+
+Para que                            : para entender el funcionamiento de la recursividad y objetvos de la semana 8
+
+que hice yo                         : le di prompts a la IA para que me explique el código y me ayude a entenderlo, 
+pense la logica del codigo y la IA autocompletaba el codigo repetitivo
+
+
+puedo explicar todo el codigo sin IA: Sí
+
+"""
